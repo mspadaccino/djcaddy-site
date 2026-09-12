@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DjCaddy — see your whole music library, build sets that flow</title>
+<meta name="description" content="DjCaddy maps your entire DJ library by how the tracks sound, plans the arc of a set, and writes hot cues straight into rekordbox. Runs on your Mac. 7-day free trial.">
+<meta property="og:title" content="DjCaddy — see your whole library, build sets that flow">
+<meta property="og:description" content="From ninety thousand files to a set that flows, without scrolling. 7-day free trial, no account.">
+<meta property="og:image" content="img/og.png">
+<style>
+  :root {
+    --bg: #0f1120; --panel: #171a2c; --raised: #22263a; --ink: #f2f3f7;
+    --dim: #9a9fb3; --brand: #FF6A2B; --red: #ff4b4b; --line: #2b3047;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 17px/1.55 Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  a { color: var(--brand); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  header { display: flex; align-items: center; justify-content: space-between;
+           padding: 18px 0; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600;
+          font-size: 22px; letter-spacing: -0.3px; text-decoration: none; color: var(--ink); }
+  .logo b { color: var(--brand); font-weight: 600; }
+  nav a { color: var(--dim); text-decoration: none; margin-left: 22px; font-size: 15px; }
+  nav a:hover { color: var(--ink); }
+  .btn { display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 600;
+         text-decoration: none; font-size: 16px; border: 1px solid transparent; }
+  .btn.primary { background: var(--red); color: #fff; }
+  .btn.ghost { border-color: var(--line); color: var(--ink); background: var(--panel); }
+  .btn small { display: block; font-weight: 400; font-size: 12px; opacity: .8; }
+  .hero { padding: 56px 0 32px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  h1 { font-size: 46px; line-height: 1.1; letter-spacing: -1px; margin: 0 0 18px; }
+  h1 span { color: var(--brand); }
+  .lede { font-size: 20px; color: var(--dim); margin: 0 0 28px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .fine { color: var(--dim); font-size: 14px; margin-top: 12px; }
+  .shot { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+          aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
+          color: var(--dim); font-size: 14px; text-align: center; padding: 20px; overflow: hidden; }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 32px; letter-spacing: -0.6px; margin: 0 0 10px; }
+  .sub { color: var(--dim); font-size: 18px; margin: 0 0 32px; max-width: 700px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .card h3 { margin: 0 0 8px; font-size: 19px; }
+  .card p { margin: 0; color: var(--dim); font-size: 15.5px; }
+  .card .shot { aspect-ratio: 16/9; margin-top: 16px; }
+  .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .steps div { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .steps div::before { counter-increment: s; content: counter(s); display: inline-block;
+       width: 30px; height: 30px; border-radius: 50%; background: var(--brand); color: #fff;
+       text-align: center; line-height: 30px; font-weight: 700; margin-bottom: 12px; }
+  .steps h3 { margin: 0 0 6px; font-size: 18px; }
+  .steps p { margin: 0; color: var(--dim); font-size: 15px; }
+  .quote { font-size: 20px; line-height: 1.5; border-left: 3px solid var(--brand); padding-left: 18px; color: var(--ink); }
+  .quote small { display: block; color: var(--dim); font-size: 14px; margin-top: 8px; }
+  .price { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+  .price .card { display: flex; flex-direction: column; }
+  .amount { font-size: 44px; font-weight: 700; letter-spacing: -1px; margin: 6px 0; }
+  .amount s { color: var(--dim); font-size: 22px; font-weight: 400; margin-left: 8px; }
+  .price ul { padding-left: 18px; margin: 12px 0 20px; color: var(--dim); font-size: 15px; }
+  .price li { margin: 4px 0; }
+  .price .btn { margin-top: auto; text-align: center; }
+  .faq details { border-top: 1px solid var(--line); padding: 14px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 17px; }
+  .faq p { color: var(--dim); margin: 10px 0 0; font-size: 15.5px; }
+  footer { padding: 32px 0 48px; color: var(--dim); font-size: 14px; border-top: 1px solid var(--line); }
+  code { background: var(--raised); padding: 2px 6px; border-radius: 5px; font-size: 14px; }
+  @media (max-width: 820px) {
+    .hero, .grid, .steps, .price { grid-template-columns: 1fr; }
+    h1 { font-size: 36px; } nav { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#"><img src="img/icon.svg" width="34" height="34" alt="">Dj<b>Caddy</b></a>
+    <nav>
+      <a href="#how">How it works</a><a href="#features">Features</a><a href="#buy">Pricing</a><a href="#faq">FAQ</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <h1>Ninety thousand tracks.<br>One picture. <span>A set that flows.</span></h1>
+      <p class="lede">DjCaddy listens to every track in your library and draws it as a map where
+        things that sound alike sit together. Click a track, see what mixes out of it, draw the arc
+        of your set — then write the cues straight into rekordbox.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/mspadaccino/djcaddy-site/releases/latest/download/DjCaddy.dmg">Download for macOS <small>free 7-day trial · 800 MB · Apple silicon</small></a>
+        <a class="btn ghost" href="#buy">Buy a licence · €49</a>
+      </div>
+      <p class="fine">No account. No upload. Your music never leaves your Mac.
+        Requires macOS 13 or newer. Windows companion build <a href="#faq">below</a>.</p>
+    </div>
+    <div class="shot">
+      <!-- SCREENSHOT 1: Navigator with the full map, a seed clicked, the Quick List filled.
+           Dark theme, 1600×1000, no personal file paths in view. -->
+      <img src="img/hero-navigator.png" alt="The Navigator: the whole library as a map of points, a track selected, the tracks that mix out of it listed below" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Screenshot: Navigator — the map with a seed clicked and the Quick List filled'}))">
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <section>
+    <h2>Big libraries stop being libraries.</h2>
+    <p class="sub">Past a few thousand tracks, a folder is a place where music goes to be forgotten.
+      You know the record you want is in there. Finding the six tracks that belong <em>next</em> to it,
+      at two in the morning, is another matter.</p>
+    <div class="grid">
+      <div class="card"><h3>Folders sort by name. Sets are built by sound.</h3>
+        <p>Genre tags are a guess someone made once. Tempo and key narrow the field but never say
+          whether two tracks actually <em>belong</em> together. DjCaddy hears the track itself.</p></div>
+      <div class="card"><h3>You keep playing the same two hundred.</h3>
+        <p>Not because the rest is worse — because it is invisible. A map shows the corners you never visit,
+          and what lives there.</p></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">Point it at a folder and let it run. It is a long job — hours on a whole library —
+      but it is resumable, it runs in the background, and the map is usable after the first few thousand tracks.</p>
+    <div class="steps">
+      <div><h3>It listens</h3><p>A neural network (Essentia's Discogs model) turns each track into a
+        1280-number fingerprint of how it sounds — before it gets flattened into a genre name.
+        BPM and key are read from your tags or measured.</p></div>
+      <div><h3>It draws</h3><p>The fingerprints become a map: every track a point, alike ones together.
+        Filter by genre, BPM, key, energy, mood. Colour and size the points by whatever you want to read.</p></div>
+      <div><h3>You build</h3><p>Click a seed and see what mixes out of it. Box-select a group and let
+        <b>magic sort</b> order it. Draw a lasso across the clusters and get a set that follows the line.</p></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <h2>Four tools, one library.</h2>
+    <p class="sub">They are the four tabs of the app. Under all of them, one player with the waveform.</p>
+    <div class="grid">
+      <div class="card"><h3>🧭 Navigator</h3>
+        <p>The map, and the Set Curator beside it: grow a chain one track at a time from ranked candidates,
+          let <b>Auto chain</b> plan the run from here to a track you name, tune a <b>Radio Mix</b> from a group
+          you like, or type what you want — <em>"synth pop anni 80, solo extended"</em> — and get a playlist.
+          Export as M3U8 or rekordbox XML.</p>
+        <div class="shot"><!-- SCREENSHOT 2: Set Curator with the chain on the left and candidates on the right; Camelot wheel visible. --><img src="img/curator.png" alt="Set Curator" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Screenshot: Set Curator — chain, candidates, Camelot wheel'}))"></div></div>
+      <div class="card"><h3>🌊 Cue Finder</h3>
+        <p>Phrase boundaries suggested on the waveform; check them by ear, tick which become hot cues
+          (pads A–H) and which memory cues, and write them <b>straight into the rekordbox library</b>.
+          No XML round-trip.</p>
+        <div class="shot"><!-- SCREENSHOT 3: Cue Finder with the waveform, phrase markers and the hot cue ticks. --><img src="img/cues.png" alt="Cue Finder" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Screenshot: Cue Finder — waveform with phrase markers and the pads ticked'}))"></div></div>
+      <div class="card"><h3>🏷️ Tag Maker</h3>
+        <p>Genre and mood inferred by the model and written into the files' own tags — a track can be
+          Minimal <em>and</em> Deep House, and both are kept. Your library gets the metadata it never had.</p></div>
+      <div class="card"><h3>📁 File Analysis</h3>
+        <p>Duplicates, junk, files that will not open — and a quarantine plan you review before it runs.
+          The library stays honest as it grows.</p></div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section>
+    <h2>Two minutes, start to set.</h2>
+    <p class="sub">Building the map, clicking a seed, drawing a lasso, writing the cues.</p>
+    <div class="shot" style="aspect-ratio:16/9">
+      <!-- VIDEO: replace with the YouTube embed once the demo video is up:
+           <iframe width="100%" height="100%" src="https://www.youtube.com/embed/VIDEO_ID" title="DjCaddy demo" frameborder="0" allowfullscreen></iframe> -->
+      Demo video — YouTube embed goes here
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF (fill after the closed beta) -->
+  <section>
+    <div class="grid">
+      <div class="quote">“QUOTE FROM A BETA DJ — one sentence about the first set built with the map.”<small>Name · city · what they play</small></div>
+      <div class="quote">“QUOTE FROM A BETA DJ — about the cues, or the library finally making sense.”<small>Name · city · what they play</small></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="buy">
+    <h2>Try it for a week. Then it is yours.</h2>
+    <p class="sub">The trial is the full app, nothing locked. When the seven days are over the app asks for a
+      licence key and nothing else changes — your map, playlists and cues stay where they are.</p>
+    <div class="price">
+      <div class="card"><h3>Free trial</h3>
+        <div class="amount">€0</div>
+        <ul><li>7 days, every feature</li><li>No account, no card, no email</li><li>Your data stays on your Mac</li></ul>
+        <a class="btn ghost" href="https://github.com/mspadaccino/djcaddy-site/releases/latest/download/DjCaddy.dmg">Download for macOS</a></div>
+      <div class="card"><h3>Licence · launch price</h3>
+        <div class="amount">€49 <s>€69</s></div>
+        <ul><li>One-time payment, no subscription</li><li>All 1.x updates included</li><li>Valid on one computer — a new Mac gets a new key, free</li><li>VAT and invoice handled at checkout</li></ul>
+        <!-- CHECKOUT_URL: the Lemon Squeezy (or Paddle) checkout link. The checkout must ask for the machine code (DjCaddy ▸ trial badge ▸ "Your machine code"). -->
+        <a class="btn primary" href="CHECKOUT_URL">Buy a licence</a></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="faq">
+    <h2>Questions</h2>
+    <details><summary>Why is the download 800 MB (2 GB installed)?</summary><p>Everything is inside: the neural network and its models,
+      the audio decoders, the stem separator used for the cue analysis. Nothing is downloaded later, nothing is
+      sent anywhere, and it works with the network off.</p></details>
+    <details><summary>How long does the analysis take?</summary><p>About five seconds per track on Apple silicon.
+      A 20,000-track library is a night; 90,000 is a few days of background work. It is resumable — stop it, use the
+      Mac, pick it up later — and the map is already useful after the first few thousand tracks.</p></details>
+    <details><summary>Does it work with rekordbox / Serato / Traktor?</summary><p>Any library of mp3 and flac files.
+      Playlists export as M3U8 (everything reads it) and as rekordbox XML. Hot cues and memory cues are written
+      directly into the rekordbox 6/7 database — for other software, export the XML.</p></details>
+    <details><summary>Is there a Windows version?</summary><p>A companion build: it opens a map built on a Mac —
+      playlists, set building, the board, the player, cues, File Analysis all work — but it cannot <em>build</em>
+      the map or tag files, because the analysis library has no Windows release. If you are Windows-only, wait.</p></details>
+    <details><summary>What does the licence cover?</summary><p>One computer, for good, with every 1.x update.
+      Moving to a new Mac? Write in with your order number and the new machine code, and a new key comes back
+      at no charge.</p></details>
+    <details><summary>Does it send anything home?</summary><p>No. No account, no telemetry, no upload. The licence
+      check happens on your machine. The only optional network feature is the Crate Buddy phrase reader, which
+      uses <em>your own</em> Claude API key if you choose to add one.</p></details>
+  </section>
+
+  <footer>
+    DjCaddy is made by Maurizio Spadaccino, a DJ who got tired of scrolling. <a href="mailto:SUPPORT_EMAIL">Write to me</a>
+    · <a href="PRIVACY_URL">Privacy</a> · <a href="TERMS_URL">Terms &amp; refunds</a>
+  </footer>
+</div>
+</body>
+</html>
