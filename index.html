@@ -30,16 +30,18 @@
   .btn.primary { background: var(--red); color: #fff; }
   .btn.ghost { border-color: var(--line); color: var(--ink); background: var(--panel); }
   .btn small { display: block; font-weight: 400; font-size: 12px; opacity: .8; }
-  .hero { padding: 56px 0 32px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  .hero { padding: 56px 0 32px; display: grid; grid-template-columns: 1fr; gap: 40px; }
+  .hero > div:first-child { max-width: 760px; }
   h1 { font-size: 46px; line-height: 1.1; letter-spacing: -1px; margin: 0 0 18px; }
   h1 span { color: var(--brand); }
   .lede { font-size: 20px; color: var(--dim); margin: 0 0 28px; }
   .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .fine { color: var(--dim); font-size: 14px; margin-top: 12px; }
   .shot { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-          aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
-          color: var(--dim); font-size: 14px; text-align: center; padding: 20px; overflow: hidden; }
-  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+          display: flex; align-items: center; justify-content: center; min-height: 120px;
+          color: var(--dim); font-size: 14px; text-align: center; overflow: hidden; }
+  .shot span { padding: 40px 20px; }
+  .shot img { width: 100%; height: auto; display: block; }
   section { padding: 56px 0; border-top: 1px solid var(--line); }
   h2 { font-size: 32px; letter-spacing: -0.6px; margin: 0 0 10px; }
   .sub { color: var(--dim); font-size: 18px; margin: 0 0 32px; max-width: 700px; }
@@ -47,7 +49,8 @@
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
   .card h3 { margin: 0 0 8px; font-size: 19px; }
   .card p { margin: 0; color: var(--dim); font-size: 15.5px; }
-  .card .shot { aspect-ratio: 16/9; margin-top: 16px; }
+  .card .shot { margin-top: 16px; }
+  .card.wide { grid-column: 1 / -1; }
   .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .steps div { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
   .steps div::before { counter-increment: s; content: counter(s); display: inline-block;
@@ -142,13 +145,13 @@
     <h2>Four tools, one library.</h2>
     <p class="sub">They are the four tabs of the app. Under all of them, one player with the waveform.</p>
     <div class="grid">
-      <div class="card"><h3>🧭 Navigator</h3>
+      <div class="card wide"><h3>🧭 Navigator</h3>
         <p>The map, and the Set Curator beside it: grow a chain one track at a time from ranked candidates,
           let <b>Auto chain</b> plan the run from here to a track you name, tune a <b>Radio Mix</b> from a group
           you like, or type what you want — <em>"synth pop anni 80, solo extended"</em> — and get a playlist.
           Export as M3U8 or rekordbox XML.</p>
         <div class="shot"><!-- SCREENSHOT 2: Set Curator with the chain on the left and candidates on the right; Camelot wheel visible. --><img src="img/curator.png" alt="Set Curator" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Screenshot: Set Curator — chain, candidates, Camelot wheel'}))"></div></div>
-      <div class="card"><h3>🌊 Cue Finder</h3>
+      <div class="card wide"><h3>🌊 Cue Finder</h3>
         <p>Phrase boundaries suggested on the waveform; check them by ear, tick which become hot cues
           (pads A–H) and which memory cues, and write them <b>straight into the rekordbox library</b>.
           No XML round-trip.</p>
@@ -169,7 +172,7 @@
       the height whatever you choose to read — BPM, energy, mood. A set that climbs, holds and lets go
       looks like one. The roughest transition is named, repeats are tinted, and <b>Create chapters</b>
       splits the run into intro, buildup, tension, climax and release. Export as M3U8 or rekordbox XML.</p>
-    <div class="shot" style="aspect-ratio:auto">
+    <div class="shot">
       <!-- SCREENSHOT 4: the Playlist tab with the table and the height curve under it, "Height means BPM". -->
       <img src="img/playlist.png" alt="The Playlist: the tracks in order, and under them the curve of the set with one dot per track, height by BPM" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Screenshot: Playlist — the table and the curve of the set'}))">
     </div>
