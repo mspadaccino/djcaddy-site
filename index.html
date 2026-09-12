@@ -72,6 +72,14 @@
   .faq p { color: var(--dim); margin: 10px 0 0; font-size: 15.5px; }
   footer { padding: 32px 0 48px; color: var(--dim); font-size: 14px; border-top: 1px solid var(--line); }
   code { background: var(--raised); padding: 2px 6px; border-radius: 5px; font-size: 14px; }
+  #order label { display: block; font-weight: 600; font-size: 15px; margin: 6px 0 6px; }
+  #order input { width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--line);
+                 background: var(--bg); color: var(--ink); font: 16px Menlo, monospace; letter-spacing: 1px; }
+  #order input:invalid:not(:placeholder-shown) { border-color: var(--red); }
+  .dimtxt { color: var(--dim); font-size: 13.5px; font-weight: 400; margin: 6px 0 12px; }
+  #paypal-button-container { min-height: 48px; margin-top: 8px; }
+  #paypal-button-container.locked { opacity: .35; pointer-events: none; }
+  .thanks { background: var(--bg); border: 1px solid var(--brand); border-radius: 10px; padding: 14px 16px; margin-top: 12px; font-size: 15px; }
   @media (max-width: 820px) {
     .hero, .grid, .steps, .price { grid-template-columns: 1fr; }
     h1 { font-size: 36px; } nav { display: none; }
@@ -209,9 +217,16 @@
         <a class="btn ghost" href="https://github.com/mspadaccino/djcaddy-site/releases/latest/download/DjCaddy.dmg">Download for macOS</a></div>
       <div class="card"><h3>Licence · launch price</h3>
         <div class="amount">€49 <s>€69</s></div>
-        <ul><li>One-time payment, no subscription</li><li>All 1.x updates included</li><li>Valid on one computer — a new Mac gets a new key, free</li><li>VAT and invoice handled at checkout</li></ul>
-        <!-- CHECKOUT_URL: the Lemon Squeezy (or Paddle) checkout link. The checkout must ask for the machine code (DjCaddy ▸ trial badge ▸ "Your machine code"). -->
-        <a class="btn primary" href="CHECKOUT_URL">Buy a licence</a></div>
+        <ul><li>One-time payment, no subscription</li><li>All 1.x updates included</li><li>Valid on one computer — a new Mac gets a new key, free</li><li>Pay with PayPal or a card, through PayPal</li></ul>
+        <form id="order" onsubmit="return false">
+          <label for="machine">Your machine code <span class="dimtxt">— in DjCaddy, click the <em>Trial</em> badge and press <em>Copy</em></span></label>
+          <input id="machine" placeholder="1A2B-3C4D-5E6F-7A8B" autocomplete="off" spellcheck="false" maxlength="19" required>
+          <p class="dimtxt" id="machine-hint">Paste it exactly as the app shows it: your key is made for that code, and only that Mac will accept it.</p>
+          <div id="paypal-button-container"></div>
+          <p class="dimtxt" id="paypal-fallback" hidden>The PayPal button did not load. Write to <a href="mailto:SUPPORT_EMAIL">SUPPORT_EMAIL</a> with your machine code and you will get a payment link.</p>
+          <div id="thanks" class="thanks" hidden></div>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -244,5 +259,53 @@
     · <a href="PRIVACY_URL">Privacy</a> · <a href="TERMS_URL">Terms &amp; refunds</a>
   </footer>
 </div>
+<!-- PAYPAL_CLIENT_ID: the LIVE client id of the app created at developer.paypal.com (Apps & Credentials ▸ Live).
+     For a dry run, use the SANDBOX client id and add &debug=true. -->
+<script src="https://www.paypal.com/sdk/js?client-id=PAYPAL_CLIENT_ID&currency=EUR&intent=capture&disable-funding=paylater,credit"
+        onerror="document.getElementById('paypal-fallback').hidden=false"></script>
+<script>
+(function () {
+  var PRICE = "49.00";
+  var CODE = /^[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/;
+  var input = document.getElementById("machine");
+  var box = document.getElementById("paypal-button-container");
+  var thanks = document.getElementById("thanks");
+
+  function code() { return input.value.trim().toUpperCase(); }
+  function lock() { box.classList.toggle("locked", !CODE.test(code())); }
+  input.addEventListener("input", lock);
+  lock();
+
+  if (!window.paypal) { document.getElementById("paypal-fallback").hidden = false; return; }
+  paypal.Buttons({
+    style: { layout: "vertical", color: "gold", shape: "rect", label: "buynow", height: 44 },
+    onClick: function (data, actions) {
+      if (!CODE.test(code())) { input.focus(); input.reportValidity(); return actions.reject(); }
+      return actions.resolve();
+    },
+    createOrder: function (data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          description: "DjCaddy licence — machine " + code(),
+          custom_id: code(),
+          amount: { currency_code: "EUR", value: PRICE }
+        }],
+        application_context: { shipping_preference: "NO_SHIPPING" }
+      });
+    },
+    onApprove: function (data, actions) {
+      return actions.order.capture().then(function (details) {
+        var email = (details.payer && details.payer.email_address) || "the address on your PayPal account";
+        thanks.innerHTML = "<b>Thank you.</b> Your licence key for <code>" + code() + "</code> goes to <b>" + email +
+          "</b> within 24 hours, usually much sooner. Your trial keeps working meanwhile. Order " +
+          "<code>" + details.id + "</code> — keep it in case you change Mac.";
+        thanks.hidden = false;
+        box.hidden = true; input.readOnly = true;
+      });
+    },
+    onError: function () { document.getElementById("paypal-fallback").hidden = false; }
+  }).render("#paypal-button-container");
+})();
+</script>
 </body>
 </html>
